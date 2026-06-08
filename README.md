@@ -1,15 +1,17 @@
 # Contribution [#]: [Issue Title]
 
-**Contribution Number:** [1 / 2 / 3]  
-**Student:** [Your Name]  
-**Issue:** [GitHub issue link]  
-**Status:** [Phase I / Phase II / Phase III / Phase IV] [In Progress / Complete]
+**Contribution Number:** [1]  
+**Student:** [Zeynep Sahin]  
+**Issue:** [[GitHub issue link](https://github.com/trinodb/trino/issues/6190)]  
+**Status:** [Phase I] [Complete]
 
 ---
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
+I chose this issue because I am interested in building technologies that are not only functional, but also accessible, intuitive, and comfortable for users to interact with. Improving CLI prompt colors on a dark terminal background may seem like a small change, but visual clarity has a real impact on usability, especially for developers who spend long periods of time working in terminal environments. Making text easier to read can reduce friction, improve accessibility, and create a better overall user experience.
+
+This issue also matches my interest in improving user interfaces and the usability of the products I build. I want to become better at noticing details that affect how people experience software, including readability, contrast, and design choices that make tools more inclusive. Contributing to this issue in the TrinoDB repository would help me learn more about open-source development while giving me hands-on experience making a practical improvement that directly benefits users.
 
 ---
 
