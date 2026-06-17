@@ -1,4 +1,4 @@
-# Contribution [#]: [Issue Title]
+# Contribution [1]: [CLI Color Issue for Trino Codebase/Repository]
 
 **Contribution Number:** [1]  
 **Student:** [Zeynep Sahin]  
