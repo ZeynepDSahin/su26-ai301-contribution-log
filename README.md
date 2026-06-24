@@ -3,7 +3,8 @@
 **Contribution Number:** [1]  
 **Student:** [Zeynep Sahin]  
 **Issue:** [[GitHub issue link](https://github.com/trinodb/trino/issues/6190)]  
-**Status:** [Phase II] [Complete]
+**Status:** [Phase III] [Complete]
+**Branch Link:** https://github.com/ZeynepDSahin/trino/tree/fix/cli-prompt-color-dark-bg 
 
 ---
 
@@ -104,6 +105,9 @@ Finally, I would test or visually inspect the updated CLI prompt on a dark termi
 
 ## Testing Strategy
 
+I wrote a small test that actually reaches into the real colored() method and checks what it produces, rather than re-implementing the logic in the test and checking a copy, because I wanted it to break if the real code ever regresses. It confirms two things: the prompt now comes out bold, and it no longer carries that dark-gray code. I also sanity-checked the whole thing by hand against the real library, building the exact string the fix generates and confirming it starts with the bold marker, contains the prompt text, and has none of the old gray. That all lined up. I'll be upfront that I couldn't get a clean full test run locally because of the unrelated compile problem I mentioned, but the test runs fine once the project builds properly, and I noted the exact commands to run it.
+
+
 ### Unit Tests
 
 - [ ] Test case 1: [Description]
@@ -123,9 +127,10 @@ Finally, I would test or visually inspect the updated CLI prompt on a dark termi
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week [3] Progress
 
-[What you built this week, challenges faced, decisions made]
+So the actual fix turned out to be tiny, which honestly surprised me. The prompt you see in the CLI, that little "trino>" plus the "->" you get on continuation lines, all gets its color from one small helper method called colored() inside InputReader. It was wrapping the text in DEFAULT.foreground(BRIGHT), and all I really had to do was change that to DEFAULT.bold() and delete the leftover import that was no longer being used. Two lines, basically. I made the same edit cover both the main prompt and the continuation prompt for free since they share that helper. I kept everything else untouched on purpose, no tidying up of nearby code or reformatting, just the change that matters, and I committed it on its own branch off master with a message explaining the reasoning.
+
 
 ### Week [Y] Progress
 
@@ -161,8 +166,7 @@ Finally, I would test or visually inspect the updated CLI prompt on a dark termi
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
-
+The part that actually took some head-scratching was figuring out why the prompt looked gray in the first place, because the code said "BRIGHT" and you'd assume that means brighter, not dimmer. It didn't add up until I pulled apart the jline library and realized BRIGHT is just the number 8, and 8 in ANSI color terms is "bright black," which is really just dark gray. So the code was quietly asking for gray the whole time, which is exactly why it disappears against a dark terminal. I proved it to myself by running a tiny throwaway snippet that produced the same escape code the CLI emits, and sure enough it spat out the gray one. Then I had to think a bit about the fix itself, because the obvious move, hardcoding a bright color like white, would just flip the problem onto people using light backgrounds. Going with bold over the terminal's own default color sidesteps that, and it matches how the rest of the CLI already styles things. The genuinely frustrating stretch was trying to run the full test suite. The project insists on a very new Java version I didn't have, and once I sorted that out a completely unrelated part of the codebase refused to compile in my setup. I checked whether that breakage had anything to do with my change, confirmed it didn't (it fails the same way on untouched code), and decided not to keep fighting the build machinery, since chasing it wasn't going to teach me anything about the prompt color.
 ### What I'd Do Differently Next Time
 
 [Reflection on your process]
