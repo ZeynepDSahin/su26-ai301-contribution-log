@@ -3,7 +3,7 @@
 **Contribution Number:** [1]  
 **Student:** [Zeynep Sahin]  
 **Issue:** [[GitHub issue link](https://github.com/trinodb/trino/issues/6190)]  
-**Status:** [Phase III] [Complete]
+**Status:** [Phase IV] [Complete]
 **Branch Link:** https://github.com/ZeynepDSahin/trino/tree/fix/cli-prompt-color-dark-bg 
 
 ---
@@ -146,15 +146,16 @@ So the actual fix turned out to be tiny, which honestly surprised me. The prompt
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** [[GitHub PR URL when submitted]](https://github.com/trinodb/trino/pull/30129)
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** Contributed a fix to the Trino CLI (#6190) that changes the prompt from a hard-to-read dark-gray color to bold text, keeping it legible on both dark and light terminal backgrounds, with a test added to prevent regressions.
 
 **Maintainer Feedback:**
+- *Have not received feedback yet.
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** [Awaiting review]
 
 ---
 
