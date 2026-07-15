@@ -4,7 +4,7 @@
 **Contribution Number:** [2]  
 **Student:** [Zeynep Sahin]  
 **Issue:** [[GitHub issue link]([https://github.com/trinodb/trino/issues/6190](https://github.com/trezor/trezor-firmware/issues/5040))]  
-**Status:** [Phase I] [Complete]
+**Status:** [Phase II] [Complete]
 **Branch Link:** (https://github.com/ZeynepDSahin/trezor-firmware) 
 
 ---
@@ -35,17 +35,38 @@ I chose this issue because it is an open, straightforward task labeled as a "goo
 
 ---
 
-## Reproduction Process
+Reproduction branch URL:
+https://github.com/ZeynepDSahin/trezor-firmware/tree/fix/5040-allow-getfirmwarehash-while-locked
 
-### Environment Setup
+Environment Setup
 
+Repository: fork of trezor/trezor-firmware (ZeynepDSahin/trezor-firmware), branched from main.
+Component: Trezor Core firmware (MicroPython), specifically the wire message dispatch and lock-state gating logic.
+Build/run target: Trezor emulator (core/), which runs the same message-handling code paths as physical hardware.
+Toolchain: the repo's standard Core dev environment (Nix / poetry shell); device tests are driven via trezorlib over the emulator debug link.
 
+Relevant files:
+core/src/trezor/workflow.py — the ALLOW_WHILE_LOCKED allowlist
+core/src/apps/common/lock_manager.py — _pinlock_filter, which forces unlocking for messages not on the allowlist
+core/src/apps/misc/get_firmware_hash.py — the GetFirmwareHash handler
 
-### Steps to Reproduce
+Steps to Reproduce:
 
+Run the firmware and initialize a device with a PIN set so it can be locked.
+Lock the device (or use a fresh session where features.unlocked is False).
+Send a GetFirmwareHash message while the device is locked.
+Original behavior (the bug): because GetFirmwareHash was not listed in ALLOW_WHILE_LOCKED, _pinlock_filter wraps the handler and calls unlock_device() first, forcing a PIN prompt before the hash is returned — even though computing the firmware hash never accesses the seed or any secret.
+After the fix: GetFirmwareHash is added to the allowlist, so the handler runs directly, returns the hash without any unlock prompt, and the device stays locked.
+Reproduction Evidence
 
+Branch: https://github.com/ZeynepDSahin/trezor-firmware/tree/fix/5040-allow-getfirmwarehash-while-locked
+Commit: https://github.com/ZeynepDSahin/trezor-firmware/commit/c6801c969
 
-### Reproduction Evidence
+Changes:
+
+core/src/trezor/workflow.py — added MessageType.GetFirmwareHash to both the THP and non-THP ALLOW_WHILE_LOCKED tuples.
+tests/device_tests/test_firmware_hash.py — new test test_firmware_hash_while_locked: sets a PIN, asserts unlocked is False, calls firmware.get_hash(...), asserts it returns the correct hash without a PIN prompt, and asserts the device remains locked afterward.
+core/.changelog.d/5040.added — changelog fragment referencing issue #5040.
 
 
 ---
